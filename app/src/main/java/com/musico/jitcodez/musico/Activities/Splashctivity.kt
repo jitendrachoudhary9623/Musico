@@ -1,4 +1,4 @@
-package com.musico.jitcodez.musico
+package com.musico.jitcodez.musico.Activities
 
 import android.Manifest
 import android.content.Context
@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.ActivityCompat
 import android.widget.Toast
+import com.musico.jitcodez.musico.R
 
 class Splashctivity : AppCompatActivity() {
 
