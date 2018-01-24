@@ -44,7 +44,7 @@ class NavigationDrawer_Adapter(textData:ArrayList<String>,imageData:IntArray,con
     }
 
     override fun onBindViewHolder(holder: Item_ViewHolder?, position: Int) {
-holder?.Icon_GET?.setBackgroundColor(mImageData?.get(position) as Int);
+holder?.Icon_GET?.setBackgroundResource(mImageData?.get(position) as Int);
 holder?.Text_GET?.setText(mtextData?.get(position));
         holder?.holderLayout?.setOnClickListener(
                 {
