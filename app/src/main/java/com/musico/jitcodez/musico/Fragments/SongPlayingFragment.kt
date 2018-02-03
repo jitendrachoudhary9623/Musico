@@ -189,7 +189,7 @@ class SongPlayingFragment : Fragment() {
                 currentSongHelper?.isLoop = true
                 currentSongHelper?.isShuffle = false
                 loopImageButton?.setBackgroundResource(R.drawable.loop_icon)
-                shuffleImageButton?.setBackgroundResource(R.drawable.loop_white_icon)
+                shuffleImageButton?.setBackgroundResource(R.drawable.shuffle_white_icon)
             }
 
         })
@@ -326,6 +326,7 @@ class SongPlayingFragment : Fragment() {
     {
         var finalTime=mediaPlayer.duration
         var startTime=mediaPlayer.currentPosition
+        seekbar?.max=finalTime
         startTimeText?.setText(String.format("%d:%d",
                 TimeUnit.MILLISECONDS.toMinutes(startTime?.toLong() as Long),
                 TimeUnit.MILLISECONDS.toSeconds(startTime?.toLong() as Long)-
