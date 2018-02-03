@@ -4,10 +4,15 @@ import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.musico.jitcodez.musico.Songs
 import android.content.Context
+import android.os.Bundle
+import android.support.v4.app.FragmentActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
+import com.musico.jitcodez.musico.Activities.MainActivity
+import com.musico.jitcodez.musico.Fragments.MainScreenFragment
+import com.musico.jitcodez.musico.Fragments.SongPlayingFragment
 import com.musico.jitcodez.musico.R
 
 /**
@@ -33,7 +38,19 @@ class MainScreenAdapter(_songDetails:ArrayList<Songs>,_context:Context): Recycle
         holder?.trackTitle?.text=songObject?.songTitle
         holder?.trackArtist?.text=songObject?.artist
         holder?.contentHolder?.setOnClickListener({
-            //Play the song
+            val songPlayingFragment= SongPlayingFragment();
+            var args= Bundle()
+            args.putString("songArtist",songObject?.artist)
+            args.putString("path",songObject?.songData)
+            args.putString("songTitle",songObject?.songTitle)
+            args.putInt("SongId",songObject?.songID?.toInt() as Int)
+            args.putInt("songPosition",position)
+            args.putParcelableArrayList("songData",songDetails)
+            (mContext as FragmentActivity).supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.details_fragment,songPlayingFragment)
+                    .commit()
+
         })
     }
 
