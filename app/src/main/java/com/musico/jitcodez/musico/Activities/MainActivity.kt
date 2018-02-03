@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         var navAdapter=NavigationDrawer_Adapter(navigationTextList,navigationIconList,this)
         navAdapter.notifyDataSetChanged();
         var nav_rv=findViewById<RecyclerView>(R.id.rv_navigation_list);
-        nav_rv.layoutManager=LinearLayoutManager(this@MainActivity,LinearLayout.VERTICAL,false)
+        nav_rv.layoutManager= LinearLayoutManager(this@MainActivity,LinearLayout.VERTICAL,false) as RecyclerView.LayoutManager?
         nav_rv.itemAnimator=DefaultItemAnimator()
         nav_rv.adapter=navAdapter;
         nav_rv.setHasFixedSize(true)
