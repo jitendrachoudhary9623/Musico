@@ -216,8 +216,8 @@ class SongPlayingFragment : Fragment() {
     }
     fun clickHandler() {
         shuffleImageButton?.setOnClickListener({
-            var editorShuffle=myActivity?.getSharedPreferences(Staticated.MY_PREFS_SHUFFLE,Context.MODE_PRIVATE).edit()
-            var editorLoop=myActivity?.getSharedPreferences(Staticated.MY_PREFS_LOOP,Context.MODE_PRIVATE).edit()
+            var editorShuffle=myActivity?.getSharedPreferences(Staticated.MY_PREFS_SHUFFLE,Context.MODE_PRIVATE)?.edit()
+            var editorLoop=myActivity?.getSharedPreferences(Staticated.MY_PREFS_LOOP,Context.MODE_PRIVATE)?.edit()
 
             if (currentSongHelper?.isShuffle as Boolean) {
                 currentSongHelper?.isShuffle = false
@@ -231,8 +231,8 @@ class SongPlayingFragment : Fragment() {
                 shuffleImageButton?.setBackgroundResource(R.drawable.loop_white_icon)
                 editorShuffle?.putBoolean("feature",true)
                 editorShuffle?.apply()
-                editorLoop.putBoolean("feature",false)
-                editorLoop.apply()
+                editorLoop?.putBoolean("feature",false)
+                editorLoop?.apply()
             }
 
 
@@ -255,8 +255,8 @@ class SongPlayingFragment : Fragment() {
             playPrevious()
         })
         loopImageButton?.setOnClickListener({
-            var editorShuffle=myActivity?.getSharedPreferences(Staticated.MY_PREFS_SHUFFLE,Context.MODE_PRIVATE).edit()
-            var editorLoop=myActivity?.getSharedPreferences(Staticated.MY_PREFS_LOOP,Context.MODE_PRIVATE).edit()
+            var editorShuffle=myActivity?.getSharedPreferences(Staticated.MY_PREFS_SHUFFLE,Context.MODE_PRIVATE)?.edit()
+            var editorLoop=myActivity?.getSharedPreferences(Staticated.MY_PREFS_LOOP,Context.MODE_PRIVATE)?.edit()
 
             if (currentSongHelper?.isLoop as Boolean) {
                 currentSongHelper?.isLoop = false
@@ -270,8 +270,8 @@ class SongPlayingFragment : Fragment() {
                 shuffleImageButton?.setBackgroundResource(R.drawable.shuffle_white_icon)
                 editorShuffle?.putBoolean("feature",false)
                 editorShuffle?.apply()
-                editorLoop.putBoolean("feature",true)
-                editorLoop.apply()
+                editorLoop?.putBoolean("feature",true)
+                editorLoop?.apply()
             }
 
         })
