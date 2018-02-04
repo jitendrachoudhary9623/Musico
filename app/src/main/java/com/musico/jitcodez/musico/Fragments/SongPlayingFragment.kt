@@ -57,6 +57,12 @@ class SongPlayingFragment : Fragment() {
     var currentPosition: Int = 0
     var fetchSongs: ArrayList<Songs>? = null
 
+    object Staticated{
+        var MY_PREFS_SHUFFLE="shuffle feature"
+        var MY_PREFS_LOOP=" Loop feature"
+    }
+
+
     var updateSongTime=object:Runnable{
         override fun run() {
 
@@ -157,6 +163,40 @@ class SongPlayingFragment : Fragment() {
         clickHandler()
         var visualizationHandler=DbmHandler.Factory.newVisualizerHandler(myActivity as Context,0)
         audioVisualization?.linkTo(visualizationHandler)
+
+        var prefsForShuffle=myActivity?.getSharedPreferences(Staticated.MY_PREFS_SHUFFLE,Context.MODE_PRIVATE)
+        var isShuffleAllowed=prefsForShuffle?.getBoolean("feature",false)
+        if(isShuffleAllowed as Boolean)
+        {
+            currentSongHelper?.isShuffle=true
+            currentSongHelper?.isLoop=false
+            shuffleImageButton?.setBackgroundResource(R.drawable.shuffle_icon)
+            loopImageButton?.setBackgroundResource(R.drawable.loop_white_icon)
+        }
+        else
+        {
+            currentSongHelper?.isShuffle=false
+            shuffleImageButton?.setBackgroundResource(R.drawable.shuffle_white_icon)
+
+
+        }
+
+        var prefsForLoop=myActivity?.getSharedPreferences(Staticated.MY_PREFS_LOOP,Context.MODE_PRIVATE)
+        var isLoopAllowed=prefsForLoop?.getBoolean("feature",false)
+        if(isLoopAllowed as Boolean)
+        {
+            currentSongHelper?.isShuffle=false
+            currentSongHelper?.isLoop=true
+            shuffleImageButton?.setBackgroundResource(R.drawable.loop_icon)
+            loopImageButton?.setBackgroundResource(R.drawable.shuffle_white_icon)
+        }
+        else
+        {
+            currentSongHelper?.isLoop=false
+            loopImageButton?.setBackgroundResource(R.drawable.loop_white_icon)
+
+
+        }
     }
 
     override fun onPause() {
@@ -176,14 +216,23 @@ class SongPlayingFragment : Fragment() {
     }
     fun clickHandler() {
         shuffleImageButton?.setOnClickListener({
+            var editorShuffle=myActivity?.getSharedPreferences(Staticated.MY_PREFS_SHUFFLE,Context.MODE_PRIVATE).edit()
+            var editorLoop=myActivity?.getSharedPreferences(Staticated.MY_PREFS_LOOP,Context.MODE_PRIVATE).edit()
+
             if (currentSongHelper?.isShuffle as Boolean) {
                 currentSongHelper?.isShuffle = false
                 loopImageButton?.setBackgroundResource(R.drawable.shuffle_white_icon)
+                editorShuffle?.putBoolean("feature",false)
+                editorShuffle?.apply()
             } else {
                 currentSongHelper?.isShuffle = true
                 currentSongHelper?.isLoop = false
                 loopImageButton?.setBackgroundResource(R.drawable.shuffle_icon)
                 shuffleImageButton?.setBackgroundResource(R.drawable.loop_white_icon)
+                editorShuffle?.putBoolean("feature",true)
+                editorShuffle?.apply()
+                editorLoop.putBoolean("feature",false)
+                editorLoop.apply()
             }
 
 
@@ -206,15 +255,23 @@ class SongPlayingFragment : Fragment() {
             playPrevious()
         })
         loopImageButton?.setOnClickListener({
+            var editorShuffle=myActivity?.getSharedPreferences(Staticated.MY_PREFS_SHUFFLE,Context.MODE_PRIVATE).edit()
+            var editorLoop=myActivity?.getSharedPreferences(Staticated.MY_PREFS_LOOP,Context.MODE_PRIVATE).edit()
 
             if (currentSongHelper?.isLoop as Boolean) {
                 currentSongHelper?.isLoop = false
                 loopImageButton?.setBackgroundResource(R.drawable.loop_white_icon)
+                editorLoop?.putBoolean("feature",false)
+                editorLoop?.apply()
             } else {
                 currentSongHelper?.isLoop = true
                 currentSongHelper?.isShuffle = false
                 loopImageButton?.setBackgroundResource(R.drawable.loop_icon)
                 shuffleImageButton?.setBackgroundResource(R.drawable.shuffle_white_icon)
+                editorShuffle?.putBoolean("feature",false)
+                editorShuffle?.apply()
+                editorLoop.putBoolean("feature",true)
+                editorLoop.apply()
             }
 
         })
