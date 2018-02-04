@@ -19,6 +19,9 @@ import com.musico.jitcodez.musico.R
 import com.musico.jitcodez.musico.Songs
 import java.util.*
 import java.util.concurrent.TimeUnit
+import com.cleveroad.audiovisualization.AudioVisualization
+import com.cleveroad.audiovisualization.DbmHandler
+import com.cleveroad.audiovisualization.GLAudioVisualizationView
 
 
 /**
@@ -33,7 +36,8 @@ class SongPlayingFragment : Fragment() {
 
     var myActivity: Activity? = null
     var mediaPlayer: MediaPlayer? = null
-
+    var audioVisualization: AudioVisualization? = null
+    var glView:GLAudioVisualizationView?=null
     //views
 
     var startTimeText: TextView? = null
@@ -80,11 +84,15 @@ class SongPlayingFragment : Fragment() {
         shuffleImageButton = view?.findViewById(R.id.shuffleButton)
         songArtistView = view?.findViewById(R.id.songArtist)
         songTitleView = view?.findViewById(R.id.songTitle)
-
+        glView=view?.findViewById(R.id.visualizer_view)
 
         return view;
     }
 
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        audioVisualization=glView as AudioVisualization
+    }
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         myActivity = context as Activity
@@ -147,8 +155,25 @@ class SongPlayingFragment : Fragment() {
         onSongComplete()
         }
         clickHandler()
+        var visualizationHandler=DbmHandler.Factory.newVisualizerHandler(myActivity as Context,0)
+        audioVisualization?.linkTo(visualizationHandler)
     }
 
+    override fun onPause() {
+        super.onPause()
+        audioVisualization?.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        audioVisualization?.onResume()
+    }
+
+    override fun onDestroyView() {
+        audioVisualization?.release()
+        super.onDestroyView()
+
+    }
     fun clickHandler() {
         shuffleImageButton?.setOnClickListener({
             if (currentSongHelper?.isShuffle as Boolean) {
