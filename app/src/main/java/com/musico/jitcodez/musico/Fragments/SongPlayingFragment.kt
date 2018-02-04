@@ -231,8 +231,7 @@ class SongPlayingFragment : Fragment() {
         currentSongHelper?.songId = nextSong?.songID as Long
 
         updateTextView(currentSongHelper?.songTitle as String,currentSongHelper?.songArtist as String)
-
-        mediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
+        mediaPlayer?.reset()
         try {
             mediaPlayer?.setDataSource(myActivity, Uri.parse(currentSongHelper?.songPath))
             mediaPlayer?.prepare()
