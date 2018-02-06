@@ -4,12 +4,14 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.musico.jitcodez.musico.Songs
 
 /**
  * Created by jitu on 6/2/18.
  */
 class MusicoDatabase: SQLiteOpenHelper {
 
+    var _songList=ArrayList<Songs>()
     val DB_NAME="FavoriteDatabase"
     val TABLE_NAME="FavoriteTable"
     val COLUMN_Id="SongID"
@@ -39,6 +41,55 @@ class MusicoDatabase: SQLiteOpenHelper {
         contentValues.put(COLUMN_SONG_PATH,path)
 
         db.insert(TABLE_NAME,null,contentValues)
+        db.close()
+    }
+
+    fun queryDBList(): ArrayList<Songs>?
+    {
+        var db=this.readableDatabase
+        val query_params="SELECT * FROM "+TABLE_NAME
+        var cSor=db.rawQuery(query_params,null)
+        if(cSor.moveToFirst())
+        {
+            do {
+
+                var _id=cSor?.getInt(cSor.getColumnIndexOrThrow(COLUMN_Id))
+                var _artist=cSor?.getString(cSor.getColumnIndexOrThrow(COLUMN_SONG_ARTIST))
+                var _title=cSor?.getString(cSor.getColumnIndexOrThrow(COLUMN_SONG_TITLE))
+                var _songPath=cSor?.getString(cSor.getColumnIndexOrThrow(COLUMN_SONG_PATH))
+
+_songList.add(Songs(_id!!.toLong(), _title!!, _artist!!, _songPath!!,0))
+
+            }while(cSor.moveToNext())
+        }
+        else
+        {
+            return null;
+        }
+        return _songList
+    }
+
+    fun checkifIdExists(_id:Int):Boolean{
+        var storeId=-1090
+        val db=this.readableDatabase
+        val query_params="SELECT * FROM "+TABLE_NAME+" WHERE SongId ='$_id"
+        val cSor=db.rawQuery(query_params,null)
+        if(cSor.moveToFirst())
+        {
+            do{
+                storeId=cSor.getInt(cSor.getColumnIndexOrThrow(COLUMN_Id))
+
+            }while (cSor.moveToNext())
+        }
+        else
+            return false
+        return storeId!=-1090
+
+    }
+    fun deleteFavorite(_id:Int)
+    {
+        val db=this.writableDatabase
+        db.delete(TABLE_NAME,COLUMN_Id+"="+_id,null)
         db.close()
     }
 
