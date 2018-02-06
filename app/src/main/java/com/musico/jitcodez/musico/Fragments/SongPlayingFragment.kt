@@ -8,12 +8,14 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
 import com.musico.jitcodez.musico.CurrentSongHelper
 import com.musico.jitcodez.musico.R
 import com.musico.jitcodez.musico.Songs
@@ -22,6 +24,7 @@ import java.util.concurrent.TimeUnit
 import com.cleveroad.audiovisualization.AudioVisualization
 import com.cleveroad.audiovisualization.DbmHandler
 import com.cleveroad.audiovisualization.GLAudioVisualizationView
+import com.musico.jitcodez.musico.Databases.MusicoDatabase
 
 
 /**
@@ -50,6 +53,7 @@ class SongPlayingFragment : Fragment() {
     var songArtistView: TextView? = null
     var songTitleView: TextView? = null
     var shuffleImageButton: ImageButton? = null
+    var fab:ImageButton?=null
 
 
     var currentSongHelper: CurrentSongHelper? = null
@@ -57,6 +61,8 @@ class SongPlayingFragment : Fragment() {
     var currentPosition: Int = 0
     var fetchSongs: ArrayList<Songs>? = null
 
+
+    var favoriteContent:MusicoDatabase?=null
     object Staticated{
         var MY_PREFS_SHUFFLE="shuffle feature"
         var MY_PREFS_LOOP=" Loop feature"
@@ -91,7 +97,8 @@ class SongPlayingFragment : Fragment() {
         songArtistView = view?.findViewById(R.id.songArtist)
         songTitleView = view?.findViewById(R.id.songTitle)
         glView=view?.findViewById(R.id.visualizer_view)
-
+        fab=view?.findViewById(R.id.favoriteIcon)
+        fab?.alpha=0.8f
         return view;
     }
 
@@ -111,6 +118,9 @@ class SongPlayingFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        favoriteContent= MusicoDatabase(myActivity as Context)
+
         var path: String? = null
         var _songTitle: String? = null
         var _songArtist: String? = null
@@ -197,6 +207,12 @@ class SongPlayingFragment : Fragment() {
 
 
         }
+        if(favoriteContent?.checkifIdExists(currentSongHelper?.songId?.toInt() as Int) as Boolean){
+            fab?.setImageDrawable(ContextCompat.getDrawable(myActivity,R.drawable.favorite_on))
+        }
+        else
+            fab?.setImageDrawable(ContextCompat.getDrawable(myActivity,R.drawable.favorite_off))
+
     }
 
     override fun onPause() {
@@ -215,6 +231,20 @@ class SongPlayingFragment : Fragment() {
 
     }
     fun clickHandler() {
+        fab?.setOnClickListener({
+            if(favoriteContent?.checkifIdExists(currentSongHelper?.songId?.toInt() as Int) as Boolean){
+
+                favoriteContent?.deleteFavorite(currentSongHelper?.songId?.toInt() as Int)
+                Toast.makeText(myActivity,"Removed From Favorites",Toast.LENGTH_SHORT).show()
+                fab?.setImageDrawable(ContextCompat.getDrawable(myActivity,R.drawable.favorite_off))
+
+            }
+            else
+                fab?.setImageDrawable(ContextCompat.getDrawable(myActivity,R.drawable.favorite_on))
+            favoriteContent?.storeAsFavorites(currentSongHelper?.songId?.toInt(),currentSongHelper?.songArtist,currentSongHelper?.songTitle,currentSongHelper?.songPath)
+            Toast.makeText(myActivity,"Added to favorites",Toast.LENGTH_SHORT).show()
+
+        })
         shuffleImageButton?.setOnClickListener({
             var editorShuffle=myActivity?.getSharedPreferences(Staticated.MY_PREFS_SHUFFLE,Context.MODE_PRIVATE)?.edit()
             var editorLoop=myActivity?.getSharedPreferences(Staticated.MY_PREFS_LOOP,Context.MODE_PRIVATE)?.edit()
@@ -323,6 +353,12 @@ class SongPlayingFragment : Fragment() {
         } catch (e: Exception) {
 
         }
+        if(favoriteContent?.checkifIdExists(currentSongHelper?.songId?.toInt() as Int) as Boolean){
+            fab?.setImageDrawable(ContextCompat.getDrawable(myActivity,R.drawable.favorite_on))
+        }
+        else
+            fab?.setImageDrawable(ContextCompat.getDrawable(myActivity,R.drawable.favorite_off))
+
     }
 
     fun playPrevious() {
@@ -357,6 +393,12 @@ class SongPlayingFragment : Fragment() {
         } catch (e: Exception) {
 
         }
+        if(favoriteContent?.checkifIdExists(currentSongHelper?.songId?.toInt() as Int) as Boolean){
+            fab?.setImageDrawable(ContextCompat.getDrawable(myActivity,R.drawable.favorite_on))
+        }
+        else
+            fab?.setImageDrawable(ContextCompat.getDrawable(myActivity,R.drawable.favorite_off))
+
     }
 
     fun onSongComplete(){
@@ -395,6 +437,12 @@ class SongPlayingFragment : Fragment() {
                 currentSongHelper?.isPlaying=true
             }
         }
+        if(favoriteContent?.checkifIdExists(currentSongHelper?.songId?.toInt() as Int) as Boolean){
+            fab?.setImageDrawable(ContextCompat.getDrawable(myActivity,R.drawable.favorite_on))
+        }
+        else
+            fab?.setImageDrawable(ContextCompat.getDrawable(myActivity,R.drawable.favorite_off))
+
     }
 
     fun updateTextView(title:String,songArtist:String)
