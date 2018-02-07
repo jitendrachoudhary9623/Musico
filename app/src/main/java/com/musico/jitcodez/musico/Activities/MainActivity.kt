@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         nav_rv.setHasFixedSize(true)
 
         val intent= Intent(this@MainActivity,MainActivity::class.java)
-        val pIntent=PendingIntent.getActivity(this@MainActivity,System.currentTimeMillis() as Int,
+        val pIntent=PendingIntent.getActivity(this@MainActivity,111,
                 intent,0)
         trackNotificationBuilder=Notification.Builder(this)
                 .setContentTitle("A track is played in background")

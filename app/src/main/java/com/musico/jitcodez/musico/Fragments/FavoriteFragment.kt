@@ -51,6 +51,7 @@ class FavoriteFragment : Fragment() {
         // Inflate the layout for this fragment
 
         val view = inflater?.inflate(R.layout.fragment_favorite, container, false)
+        activity.title="Favorites"
 
         noFavorites = view?.findViewById(R.id.noFavorites)
         nowPlayingBottomBar = view?.findViewById(R.id.hiddenBarFavScreen)
@@ -75,6 +76,7 @@ class FavoriteFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onResume() {
@@ -87,8 +89,9 @@ class FavoriteFragment : Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
         super.onPrepareOptionsMenu(menu)
+        val item=menu?.findItem(R.id.action_sort)
+        item?.isVisible=false
     }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         FavoriteContent = MusicoDatabase(myActivity)

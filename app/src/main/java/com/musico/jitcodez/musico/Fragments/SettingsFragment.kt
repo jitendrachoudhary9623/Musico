@@ -28,6 +28,7 @@ class SettingsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater?.inflate(R.layout.fragment_settings, container, false)
+        activity.title="Settings"
 
         shakeSwitch = view?.findViewById(R.id.switchShake)
         return view;
@@ -35,6 +36,7 @@ class SettingsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onPause() {
@@ -83,6 +85,8 @@ class SettingsFragment : Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
         super.onPrepareOptionsMenu(menu)
+        val item=menu?.findItem(R.id.action_sort)
+        item?.isVisible=false
     }
 
 }// Required empty public constructor

@@ -157,8 +157,19 @@ class SongPlayingFragment : Fragment() {
         }
 
         fun updateTextView(title: String, songArtist: String) {
-            songTitleView?.setText(title)
-            songArtistView?.setText(songArtist)
+            var songTitleUpdate=title
+            var songaArtistUpdate=songArtist
+
+            if(title.equals("<unknown>",true))
+            {
+                songTitleUpdate="unknown"
+            }
+            if(title.equals("<unknown>",true))
+            {
+                songaArtistUpdate="unknown"
+            }
+            songTitleView?.setText(songTitleUpdate)
+            songArtistView?.setText(songaArtistUpdate)
         }
 
         fun processInformation(mediaPlayer: MediaPlayer) {
@@ -242,7 +253,7 @@ class SongPlayingFragment : Fragment() {
         var view = inflater?.inflate(R.layout.fragment_song_playing, container, false)
 
         setHasOptionsMenu(true)
-
+        activity.title="Now Playing"
         seekbar = view?.findViewById(R.id.seekBar)
         startTimeText = view?.findViewById(R.id.startTime)
         endTimeText = view?.findViewById(R.id.endTime)
