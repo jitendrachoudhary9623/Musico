@@ -15,7 +15,7 @@ class MusicoDatabase: SQLiteOpenHelper {
 
     override fun onCreate(db: SQLiteDatabase?) {
 
-    db?.execSQL("CREATE TABLE"+Staticated.TABLE_NAME+"( "+Staticated.COLUMN_Id+" INTEGER, "+Staticated.COLUMN_SONG_ARTIST+" STRING,"+Staticated.COLUMN_SONG_TITLE+" STRING,"+Staticated.COLUMN_SONG_PATH+" STRING);")
+    db?.execSQL("CREATE TABLE "+Staticated.TABLE_NAME+"( "+Staticated.COLUMN_Id+" INTEGER, "+Staticated.COLUMN_SONG_ARTIST+" STRING,"+Staticated.COLUMN_SONG_TITLE+" STRING,"+Staticated.COLUMN_SONG_PATH+" STRING);")
 
 
     }
@@ -77,7 +77,7 @@ _songList.add(Songs(_id!!.toLong(), _title!!, _artist!!, _songPath!!,0))
     fun checkifIdExists(_id:Int):Boolean{
         var storeId=-1090
         val db=this.readableDatabase
-        val query_params="SELECT * FROM "+Staticated.TABLE_NAME+" WHERE SongId ='$_id"
+        val query_params="SELECT * FROM "+Staticated.TABLE_NAME+" WHERE SongId ='$_id'"
         val cSor=db.rawQuery(query_params,null)
         if(cSor.moveToFirst())
         {
