@@ -19,6 +19,7 @@ import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.musico.jitcodez.musico.Adapters.FavoriteAdapter
+import com.musico.jitcodez.musico.Databases.MusicoDatabase
 import com.musico.jitcodez.musico.R
 import com.musico.jitcodez.musico.Songs
 
@@ -30,16 +31,22 @@ class FavoriteFragment : Fragment() {
 
     var myActivity: Activity? = null
     var trackPosition: Int = 0
-    var getSongsList: ArrayList<Songs>? = null
     var noFavorites: TextView? = null
     var nowPlayingBottomBar: RelativeLayout? = null
     var playPauseButton: ImageButton? = null
     var songTitle: TextView? = null
     var recyclerView: RecyclerView? = null
-    object statified{
 
-        var mediaPlayer: MediaPlayer?=null
+    var FavoriteContent: MusicoDatabase? = null
+
+    var refreshList: ArrayList<Songs>? = null
+    var getListFromDatabase: ArrayList<Songs>? = null
+
+    object statified {
+
+        var mediaPlayer: MediaPlayer? = null
     }
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
 
@@ -84,21 +91,10 @@ class FavoriteFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        getSongsList = getSongFromPhone()
-        if (getSongsList == null) {
-            recyclerView?.visibility = View.INVISIBLE
-            noFavorites?.visibility = View.VISIBLE
+        FavoriteContent = MusicoDatabase(myActivity)
 
-        } else {
-            //keep it as it is
-            var favoriteAdapter = FavoriteAdapter(getSongsList as ArrayList<Songs>, myActivity as Context)
-            val mLayputManager = LinearLayoutManager(activity)
-            recyclerView?.layoutManager = mLayputManager
-            recyclerView?.itemAnimator = DefaultItemAnimator()
-            recyclerView?.adapter = favoriteAdapter
-            recyclerView?.setHasFixedSize(true)
-
-        }
+        display_Favorites_by_searching()
+        bottomBarSetup()
     }
 
     fun getSongFromPhone(): ArrayList<Songs> {
@@ -151,7 +147,7 @@ class FavoriteFragment : Fragment() {
 
     fun bottomBarClickHanler() {
         nowPlayingBottomBar?.setOnClickListener({
-            statified.mediaPlayer=SongPlayingFragment.Statified.mediaPlayer
+            statified.mediaPlayer = SongPlayingFragment.Statified.mediaPlayer
             val songPlayingFragment = SongPlayingFragment();
             var args = Bundle()
             args.putString("songArtist", SongPlayingFragment.Statified.currentSongHelper?.songArtist)
@@ -180,5 +176,42 @@ class FavoriteFragment : Fragment() {
                 playPauseButton?.setBackgroundResource(R.drawable.pause_icon)
             }
         })
+    }
+
+    fun display_Favorites_by_searching() {
+        if (FavoriteContent?.checkSize() as Int > 0) {
+            refreshList = ArrayList<Songs>()
+            getListFromDatabase = FavoriteContent?.queryDBList()
+            var fetchListFromDevice = getSongFromPhone()
+            if (fetchListFromDevice != null) {
+                for (i in 0..fetchListFromDevice?.size - 1) {
+                    for (j in 0..getListFromDatabase?.size as Int - 1) {
+                        if ((getListFromDatabase?.get(j)?.songID) == (fetchListFromDevice?.get(i)?.songID)) {
+                            refreshList?.add((getListFromDatabase as ArrayList<Songs>)[j])
+                        }
+                    }
+                }
+            } else {
+
+            }
+            if (refreshList == null) {
+                recyclerView?.visibility = View.INVISIBLE
+                noFavorites?.visibility = View.VISIBLE
+
+            } else {
+                //keep it as it is
+                var favoriteAdapter = FavoriteAdapter(refreshList as ArrayList<Songs>, myActivity as Context)
+                val mLayputManager = LinearLayoutManager(activity)
+                recyclerView?.layoutManager = mLayputManager
+                recyclerView?.itemAnimator = DefaultItemAnimator()
+                recyclerView?.adapter = favoriteAdapter
+                recyclerView?.setHasFixedSize(true)
+
+            }
+        }else{
+            recyclerView?.visibility = View.INVISIBLE
+            noFavorites?.visibility = View.VISIBLE
+        }
+
     }
 }// Required empty public constructor

@@ -97,5 +97,21 @@ _songList.add(Songs(_id!!.toLong(), _title!!, _artist!!, _songPath!!,0))
         db.delete(Staticated.TABLE_NAME,Staticated.COLUMN_Id+"="+_id,null)
         db.close()
     }
+    fun checkSize():Int{
+        var counter=0
+        val db=this.readableDatabase
+        val query_params="SELECT * FROM "+Staticated.TABLE_NAME
+        val cSor=db.rawQuery(query_params,null)
+        if(cSor.moveToFirst())
+        {
+            do{
+                counter=counter+1
+            }while (cSor.moveToNext())
+        }
+        else
+            return 0
+        return counter
+
+    }
 
 }
