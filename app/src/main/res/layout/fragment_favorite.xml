@@ -12,7 +12,7 @@
 
     </android.support.v7.widget.RecyclerView>
     <RelativeLayout
-        android:id="@+id/hiddenBarMainScreen"
+        android:id="@+id/hiddenBarFavScreen"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_alignParentBottom="true"
@@ -50,7 +50,7 @@
             android:textColor="#bdbdbd" />
 
         <TextView
-            android:id="@+id/songTitleMainScreen"
+            android:id="@+id/songTitleFavScreen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/nowPlaying"

@@ -421,10 +421,11 @@ class SongPlayingFragment : Fragment() {
                 Toast.makeText(myActivity, "Removed From Favorites", Toast.LENGTH_SHORT).show()
                 fab?.setImageDrawable(ContextCompat.getDrawable(myActivity, R.drawable.favorite_off))
 
-            } else
+            } else {
                 fab?.setImageDrawable(ContextCompat.getDrawable(myActivity, R.drawable.favorite_on))
-            favoriteContent?.storeAsFavorites(currentSongHelper?.songId?.toInt(), currentSongHelper?.songArtist, currentSongHelper?.songTitle, currentSongHelper?.songPath)
-            Toast.makeText(myActivity, "Added to favorites", Toast.LENGTH_SHORT).show()
+                favoriteContent?.storeAsFavorites(currentSongHelper?.songId?.toInt(), currentSongHelper?.songArtist, currentSongHelper?.songTitle, currentSongHelper?.songPath)
+                Toast.makeText(myActivity, "Added to favorites", Toast.LENGTH_SHORT).show()
+            }
 
         })
         shuffleImageButton?.setOnClickListener({
@@ -450,6 +451,7 @@ class SongPlayingFragment : Fragment() {
 
         })
         nextImageButton?.setOnClickListener({
+            Statified.playpauseImageButton?.setBackgroundResource(R.drawable.pause_icon)
             currentSongHelper?.isPlaying = true;
             if (currentSongHelper?.isShuffle as Boolean) {
                 playNext("PlayNextLikeNormalShuffle")
@@ -488,6 +490,7 @@ class SongPlayingFragment : Fragment() {
 
         })
         playpauseImageButton?.setOnClickListener({
+
             if (mediaPlayer?.isPlaying as Boolean) {
                 mediaPlayer?.pause()
                 currentSongHelper?.isPlaying = false
